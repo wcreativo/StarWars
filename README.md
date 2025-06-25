@@ -1,35 +1,203 @@
-# StarWarsAPI
+# ⭐ Star Wars GraphQL API
 
-## Environment Setup
+A Django + GraphQL API (Relay-compatible) for exploring Star Wars characters, movies, and planets.
 
-### Prerequisites
+Built for scalability, testing, and developer happiness.
 
-- Docker
-- Docker Compose
+---
 
-### Steps to Run the Project
+## 🚀 Features
 
-1. **Clone the Repository:**
-   ```bash
+- GraphQL API with [Relay](https://relay.dev/) support
+- Real data from [SWAPI](https://swapi.dev/)
+- Dockerized for easy deployment
+- Includes mutations to create characters, planets, and movies
+- Supports pagination, filtering, and nested querying
+
+---
+
+## 🛠️ Tech Stack
+
+- Python 3.11+
+- Django 4+
+- [Graphene](https://graphene-python.org/)
+- Relay-compatible schema
+- PostgreSQL
+- Docker / Docker Compose
+
+---
+
+## ⚙️ Installation (Dev)
+
+### 1. Clone the repo
+
+```bash
    git clone https://github.com/wcreativo/StarWars
-   cd StarWarsAPI
-   ```
+   cd StarWars
+```
 
-2. **Environment Configuration:**
+### 2. Build and run with Docker
 
-   Create a .env file based on the .env.example template and fill in the necessary environment variables.
+```bash
+  docker-compose up --build
+```
 
-3. **Build and Launch Containers:**
+> First run will auto-import Star Wars data from SWAPI.
 
-    ```bash
-    docker-compose up --build
-    ```
+---
 
-### Access Information
+## 🧪 GraphQL Usage
 
-* The server will be available at http://localhost:8000
+GraphQL is available at:
 
-### Technologies
+```
+http://localhost:8000/graphql/
+```
 
-* Docker
-* Postgres
+---
+
+## 📘 Example Queries
+
+### 🧑‍🚀 All Characters (Relay Pagination)
+
+#### Request
+
+```graphql
+query {
+  allCharacters(first: 3) {
+    edges {
+      node {
+        id
+        name
+        gender
+        movies {
+          title
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+```
+
+#### Response
+
+```json
+{
+  "data": {
+    "allCharacters": {
+      "edges": [
+        {
+          "node": {
+            "id": "Q2hhcmFjdGVyVHlwZTox",
+            "name": "Luke Skywalker",
+            "gender": "male",
+            "movies": [
+              {
+                "title": "A New Hope"
+              }
+            ]
+          },
+          "cursor": "YXJyYXljb25uZWN0aW9uOjA="
+        }
+        ...
+      ],
+      "pageInfo": {
+        "hasNextPage": true,
+        "startCursor": "...",
+        "endCursor": "..."
+      }
+    }
+  }
+}
+```
+
+---
+
+## ✍️ Example Mutation
+
+### Create a Character
+
+```graphql
+mutation {
+  createCharacter(
+    name: "Leia Organa",
+    gender: "female",
+    birthYear: "19BBY",
+    movieIds: [1]
+  ) {
+    character {
+      name
+      movies {
+        title
+      }
+    }
+  }
+}
+```
+
+---
+
+## 🔎 Filter Characters by Name
+
+### Request
+
+```graphql
+query {
+  allCharacters(name_Icontains: "Leia", first: 5) {
+    edges {
+      node {
+        id
+        name
+        gender
+        movies {
+          title
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
+```
+
+---
+
+## 🐳 Docker Commands
+
+### Rebuild containers
+
+```bash
+  docker-compose down -v
+  docker-compose up --build
+```
+
+### Access Django shell
+
+```bash
+  docker-compose exec web python manage.py shell
+```
+
+### Import data manually
+
+```bash
+  docker-compose exec web python manage.py import_swapi_data
+```
+
+---
+
+## 🧼 Reset Database (Dev Only)
+
+To fully reset and re-import data:
+
+```bash
+  docker-compose down -v
+  docker-compose up --build
+```

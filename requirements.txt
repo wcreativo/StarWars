@@ -4,3 +4,5 @@ psycopg2-binary
 dotenv~=0.9.9
 python-dotenv~=1.1.1
 django-filter~=25.1
+ipython
+requests~=2.32.4
