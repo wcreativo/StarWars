@@ -13,6 +13,7 @@ Built for scalability, testing, and developer happiness.
 - Dockerized for easy deployment
 - Includes mutations to create characters, planets, and movies
 - Supports pagination, filtering, and nested querying
+- Testing
 
 ---
 
@@ -200,4 +201,10 @@ To fully reset and re-import data:
 ```bash
   docker-compose down -v
   docker-compose up --build
+```
+
+## Testing
+
+```bash
+  docker-compose exec web pytest
 ```
