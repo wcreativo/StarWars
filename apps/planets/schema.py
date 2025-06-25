@@ -22,16 +22,14 @@ class CreatePlanet(graphene.Mutation):
         name = graphene.String(required=True)
         climate = graphene.String()
         terrain = graphene.String()
-        population = graphene.String()
 
     planet = graphene.Field(PlanetType)
 
-    def mutate(self, info, name, climate=None, terrain=None, population=None):
+    def mutate(self, info, name, climate=None, terrain=None):
         planet = Planet.objects.create(
             name=name,
             climate=climate,
             terrain=terrain,
-            population=population
         )
         return CreatePlanet(planet=planet)
 

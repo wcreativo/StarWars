@@ -1,6 +1,7 @@
 import graphene
 from graphene_django.types import DjangoObjectType
 
+from apps.movies.models import Movie
 from .models import Character
 
 
@@ -24,19 +25,20 @@ class CreateCharacter(graphene.Mutation):
         name = graphene.String(required=True)
         birth_year = graphene.String()
         gender = graphene.String()
-        height = graphene.Int()
-        mass = graphene.Float()
+        movie_ids = graphene.List(graphene.ID)
 
     character = graphene.Field(CharacterType)
 
-    def mutate(self, info, name, birth_year=None, gender=None, height=None, mass=None):
+    def mutate(self, info, name, birth_year=None, gender=None, movie_ids=None):
         character = Character.objects.create(
             name=name,
             birth_year=birth_year,
             gender=gender,
-            height=height,
-            mass=mass
         )
+        if movie_ids:
+            movies = Movie.objects.filter(id__in=movie_ids)
+            character.movies.set(movies)
+
         return CreateCharacter(character=character)
 
 
